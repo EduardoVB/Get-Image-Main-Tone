@@ -69,16 +69,16 @@ Private Declare Function CreateDIBSection Lib "gdi32" (ByVal hDC&, pBitmapInfo A
 Private Const DIB_RGB_COLORS As Long = 0
 
 Public Enum ToneBrightness
-    tbBright
-    tbBrighter
+    tbLight
+    tbLighter
     tbDark
     tbDarker
-    tbAutoBrightDark
-    tbAutoBrighterDarker
+    tbAutoLightDark
+    tbAutoLighterDarker
     tbNormal
 End Enum
 
-Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As ToneBrightness = tbAutoBrighterDarker) As OLE_COLOR
+Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As ToneBrightness = tbAutoLighterDarker) As OLE_COLOR
     Dim iBmp As BITMAP
     Dim iBMPiH As BITMAPINFOHEADER
     Dim iBits() As Byte
@@ -241,15 +241,15 @@ Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As Tone
     End If
     If nBrightness = tbNormal Then
         PicMainTone = ColorHLSToRGB(iMainHue, iLum, iSat(z) / iSat_n(z))
-    ElseIf nBrightness = tbBright Then
+    ElseIf nBrightness = tbLight Then
         PicMainTone = ColorHLSToRGB(iMainHue, 200, iSat(z) / iSat_n(z))
     ElseIf nBrightness = tbDark Then
         PicMainTone = ColorHLSToRGB(iMainHue, 40, iSat(z) / iSat_n(z))
-    ElseIf nBrightness = tbBrighter Then
+    ElseIf nBrightness = tbLighter Then
         PicMainTone = ColorHLSToRGB(iMainHue, 220, iSat(z) / iSat_n(z))
     ElseIf nBrightness = tbDarker Then
         PicMainTone = ColorHLSToRGB(iMainHue, 20, iSat(z) / iSat_n(z))
-    ElseIf nBrightness = tbAutoBrighterDarker Then
+    ElseIf nBrightness = tbAutoLighterDarker Then
         If iLum > 100 Then
             PicMainTone = ColorHLSToRGB(iMainHue, 220, iSat(z) / iSat_n(z))
         Else
