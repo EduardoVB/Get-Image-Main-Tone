@@ -96,10 +96,10 @@ Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As Tone
     Dim iOldObj As Long
     
     Dim iHues(240) As Single
-    Dim iHueZones(12) As Single
+    Dim iHueZones(6) As Single
     Dim iLum As Long
-    Dim iSat(12) As Long
-    Dim iSat_n(12) As Long
+    Dim iSat(6) As Long
+    Dim iSat_n(6) As Long
     
     Dim h As Integer
     Dim l As Integer
@@ -200,9 +200,11 @@ Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As Tone
     For X = 0 To iMax - 4 Step 4
         ColorRGBToHLS RGB(iBits(X + 2), iBits(X + 1), iBits(X)), h, l, s
         h = Int(h)
+'        If h = 148 Then Stop
+        'Debug.Print RGB(iBits(X + 2), iBits(X + 1), iBits(X))
         v = s / 240 * (1 - Abs(l - 120) / 120)
         iHues(h) = iHues(h) + v
-        z = Int(h / 20)
+        z = Int(h / 40)
         iHueZones(z) = iHueZones(z) + iHues(h)
         iLum = iLum + l
         iSat(z) = iSat(z) + s
@@ -221,9 +223,9 @@ Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As Tone
     
     iMax2 = 0
     iMainHue = 0
-    f = z * 20 - 10
+    f = (z + 0.5) * 40 - 20
     If f < 0 Then f = 0
-    t = f + 20
+    t = f + 40
     If t > 240 Then t = 240
     For X = f To t
         If iHues(X) > iMax2 Then
