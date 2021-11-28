@@ -40,7 +40,7 @@ Begin VB.Form Form1
       Width           =   7200
    End
    Begin VB.Label Label1 
-      Caption         =   "It sets the background color according to the colors of the image"
+      Caption         =   "It sets the background color according to the main color of the image"
       Height          =   552
       Left            =   3348
       TabIndex        =   2
