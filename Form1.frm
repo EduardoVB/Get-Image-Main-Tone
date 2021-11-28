@@ -40,7 +40,8 @@ Begin VB.Form Form1
       Width           =   7200
    End
    Begin VB.Label Label1 
-      Caption         =   "It sets the background color according to the main color of the image"
+      BackStyle       =   0  'Transparent
+      Caption         =   "It sets the background color according to the main color of the image. Also this label ForeColor"
       Height          =   552
       Left            =   3348
       TabIndex        =   2
@@ -72,4 +73,5 @@ End Sub
 
 Private Sub Update()
     Me.BackColor = PicMainTone(Picture1.Picture)
+    Label1.ForeColor = IIf(IsDarkColor(Me.BackColor), vbWhite, vbBlack)
 End Sub

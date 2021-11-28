@@ -65,6 +65,7 @@ Private Declare Function OleCreatePictureIndirect Lib "olepro32" (PicDesc As Pic
 Private Declare Function GetDC Lib "user32" (ByVal hWnd As Long) As Long
 Private Declare Function ReleaseDC Lib "user32" (ByVal hWnd As Long, ByVal hDC As Long) As Long
 Private Declare Function CreateDIBSection Lib "gdi32" (ByVal hDC&, pBitmapInfo As BITMAPINFO, ByVal un&, lplpVoid&, ByVal Handle&, ByVal dw&) As Long
+Private Declare Function TranslateColor Lib "olepro32.dll" Alias "OleTranslateColor" (ByVal clr As OLE_COLOR, ByVal palet As Long, Col As Long) As Long
 
 Private Const DIB_RGB_COLORS As Long = 0
 
@@ -264,3 +265,11 @@ Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As Tone
     End If
 End Function
 
+
+Public Function IsDarkColor(ByVal nColor As Long) As Boolean
+    Dim l As Integer
+    
+    TranslateColor nColor, 0, nColor
+    ColorRGBToHLS nColor, 0, l, 0
+    IsDarkColor = l < 120
+End Function
