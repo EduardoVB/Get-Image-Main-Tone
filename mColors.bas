@@ -206,7 +206,7 @@ Public Function PicMainTone(nPicture As StdPicture, Optional nBrightness As Tone
         v = s / 240 * (1 - Abs(l - 120) / 120)
         iHues(h) = iHues(h) + v
         z = Int(h / 40)
-        iHueZones(z) = iHueZones(z) + iHues(h)
+        iHueZones(z) = iHueZones(z) + v
         iLum = iLum + l
         iSat(z) = iSat(z) + s
         iSat_n(z) = iSat_n(z) + 1
