@@ -128,27 +128,27 @@ Private Const FW_BOLD As Long = 700
 
 'data buffer for the ChooseFont function
 Private Type LOGFONT
-    lfHeight As Long
-    lfWidth As Long
-    lfEscapement As Long
-    lfOrientation As Long
-    lfWeight As Long
-    lfItalic As Byte
-    lfUnderline As Byte
-    lfStrikeOut As Byte
-    lfCharSet As Byte
-    lfOutPrecision As Byte
-    lfClipPrecision As Byte
-    lfQuality As Byte
-    lfPitchAndFamily As Byte
-    lfFaceName(0 To LF_FACESIZE - 1) As Byte
+    LFHeight As Long
+    LFWidth As Long
+    LFEscapement As Long
+    LFOrientation As Long
+    LFWeight As Long
+    LFItalic As Byte
+    LFUnderline As Byte
+    LFStrikeOut As Byte
+    LFCharset As Byte
+    LFOutPrecision As Byte
+    LFClipPrecision As Byte
+    LFQuality As Byte
+    LFPitchAndFamily As Byte
+    LFFaceName(0 To LF_FACESIZE - 1) As Byte
 End Type
 
 'data buffer for the ChooseFont function
 Private Type T_CHOOSEFONT
         lStructSize As Long
         hwndOwner As Long
-        hDC As Long
+        HDC As Long
         lpLogFont As Long
         iPointSize As Long
         Flags As Long
@@ -250,7 +250,7 @@ Private Type T_PrintDlg
         hwndOwner As Long
         hDevMode As Long
         hDevNames As Long
-        hDC As Long
+        HDC As Long
         Flags As Long
         nFromPage As Integer
         nToPage As Integer
@@ -652,7 +652,7 @@ Private mColor As Long
 Private mCopies As Long
 Private mCollate As Boolean
 Private mDefaultExt As String
-Private mDialogTitle As String
+Private mDialogCaption As String
 Private mFileName As String
 Private mFileTitle As String
 Private mFilter As String
@@ -773,7 +773,7 @@ Public Sub ShowColor(Optional ByVal nFlags As cdeCommonDialogExColorFlagsConstan
     If lMemHandle = 0 Then
         Exit Sub
     End If
-    ' Lock the custom color's global memory block
+    ' Lock the custom color'S global memory block
     lCustomColorAddress = GlobalLock(lMemHandle)
     If lCustomColorAddress = 0 Then
         Exit Sub
@@ -857,43 +857,43 @@ Public Sub ShowFont(Optional ByVal nFlags As cdeCommonDialogExFontFlagsConstants
     '***    prepare tChooseFont data
         
     
-    tLogFont.lfHeight = mFont.Size * 20 / Screen.TwipsPerPixelY * -1 ' PointsPerTwip = 1440 / 72 = 20
+    tLogFont.LFHeight = mFont.Size * 20 / Screen.TwipsPerPixelY * -1 ' PointsPerTwip = 1440 / 72 = 20
     'tLogFont.lfWidth As Long
     'tLogFont.lfEscapement As Long
     'tLogFont.lfOrientation As Long
     
     'tLogFont.lfWeight As Long - init from FontBold property
     If mFont.Bold Then
-        tLogFont.lfWeight = FW_BOLD
+        tLogFont.LFWeight = FW_BOLD
     Else
-        tLogFont.lfWeight = FW_NORMAL
+        tLogFont.LFWeight = FW_NORMAL
     End If
     
     'tLogFont.lfItalic As Byte - init from FontItalic property
     If mFont.Italic Then
-        tLogFont.lfItalic = 1
+        tLogFont.LFItalic = 1
     End If
     
     'tLogFont.lfUnderline As Byte - init from FontUnderline property
     If mFont.Underline Then
-        tLogFont.lfUnderline = 1
+        tLogFont.LFUnderline = 1
     End If
 
     'tLogFont.lfStrikeOut As Byte - init from FontStrikethru property
     If mFont.Strikethrough Then
-        tLogFont.lfStrikeOut = 1
+        tLogFont.LFStrikeOut = 1
     End If
 
 
-    tLogFont.lfCharSet = DEFAULT_CHARSET
+    tLogFont.LFCharset = DEFAULT_CHARSET
     'tLogFont.lfOutPrecision As Byte
     'tLogFont.lfClipPrecision As Byte
-    tLogFont.lfQuality = CLEARTYPE_QUALITY
+    tLogFont.LFQuality = CLEARTYPE_QUALITY
     'tLogFont.lfPitchAndFamily As Byte
     
     For i = 0 To Len(mFont.Name) - 1
         If i > 31 Then Exit For
-        tLogFont.lfFaceName(i) = Asc(Mid$(mFont.Name, i + 1, 1))
+        tLogFont.LFFaceName(i) = Asc(Mid$(mFont.Name, i + 1, 1))
     Next
     
     lLogFontSize = Len(tLogFont)
@@ -925,7 +925,7 @@ Public Sub ShowFont(Optional ByVal nFlags As cdeCommonDialogExFontFlagsConstants
         Exit Sub
     End If
     
-    ' Lock tLogFont's global memory block - exit on failure
+    ' Lock tLogFont'S global memory block - exit on failure
     lLogFontAddress = GlobalLock(lMemHandle)
     If lLogFontAddress = 0 Then
         Exit Sub
@@ -944,11 +944,11 @@ Public Sub ShowFont(Optional ByVal nFlags As cdeCommonDialogExFontFlagsConstants
     
     If mhDc = 0 Then
         If Not Printer Is Nothing Then
-            If ((tChooseFont.Flags And CF_PRINTERFONTS) = CF_PRINTERFONTS) Then tChooseFont.hDC = Printer.hDC
+            If ((tChooseFont.Flags And CF_PRINTERFONTS) = CF_PRINTERFONTS) Then tChooseFont.HDC = Printer.HDC
         End If
     Else
         tChooseFont.Flags = tChooseFont.Flags Or CF_PRINTERFONTS
-        tChooseFont.hDC = mhDc
+        tChooseFont.HDC = mhDc
     End If
     ' Must have some fonts
     If (tChooseFont.Flags And CF_PRINTERFONTS) = 0 Then tChooseFont.Flags = tChooseFont.Flags Or CF_SCREENFONTS
@@ -982,28 +982,28 @@ Public Sub ShowFont(Optional ByVal nFlags As cdeCommonDialogExFontFlagsConstants
             Call CopyMemory(tLogFont, ByVal lLogFontAddress, lLogFontSize)
             
             'tLogFont.lfWeight As Long  - store to FontBold property
-            If tLogFont.lfWeight >= FW_BOLD Then
+            If tLogFont.LFWeight >= FW_BOLD Then
                 mFont.Bold = True
             Else
                 mFont.Bold = False
             End If
                         
             'tLogFont.lfItalic As Byte - store to FontItalic property
-            If tLogFont.lfItalic <> 0 Then
+            If tLogFont.LFItalic <> 0 Then
                 mFont.Italic = True
             Else
                 mFont.Italic = False
             End If
             
             'tLogFont.lfUnderline As Byte - store to FontUnderline property
-            If tLogFont.lfUnderline <> 0 Then
+            If tLogFont.LFUnderline <> 0 Then
                 mFont.Underline = True
             Else
                 mFont.Underline = False
             End If
         
             'tLogFont.lfStrikeOut As Byte - store to FontStrikethru property
-            If tLogFont.lfStrikeOut <> 0 Then
+            If tLogFont.LFStrikeOut <> 0 Then
                 mFont.Strikethrough = True
             Else
                 mFont.Strikethrough = False
@@ -1012,7 +1012,7 @@ Public Sub ShowFont(Optional ByVal nFlags As cdeCommonDialogExFontFlagsConstants
             mColor = tChooseFont.rgbColors
             
             'tLogFont.lfFaceName(LF_FACESIZE) As Byte - store to FontName property
-            FontName = sByteArrayToString(tLogFont.lfFaceName())
+            FontName = sByteArrayToString(tLogFont.LFFaceName())
             
             'tChooseFont.iPointSize As Long - store to FontSize property
             mFont.Size = CLng(tChooseFont.iPointSize / 10)
@@ -1221,7 +1221,7 @@ Public Sub ShowPrinter(Optional ByVal nFlags As cdeCommonDialogExPrinterFlagsCon
             'nMaxPage As Integer - store to Max property
             mMax = tPrintDlg.nMaxPage
             
-            mhDc = tPrintDlg.hDC
+            mhDc = tPrintDlg.HDC
             
             If mDevModePtr = 0 Then
                 mDevModePtr = GlobalLock(tPrintDlg.hDevMode)
@@ -1317,7 +1317,7 @@ Public Property Let Filter(nValue As String)
 End Property
 
 
-Private Function sLeftOfNull(ByVal sIn As String)
+Private Function sLeftOfNull(ByVal sIn As String) As String
     'returns the part of sIn preceding Chr$(0)
     Dim lNullPos As Long
     
@@ -1334,7 +1334,7 @@ Private Function sLeftOfNull(ByVal sIn As String)
     
 End Function
 
-Private Function sLeftOfLastNull(ByVal sIn As String)
+Private Function sLeftOfLastNull(ByVal sIn As String) As String
     'returns the part of sIn preceding Chr$(0)
     Dim iNullPos As Long
     Dim iChr As String
@@ -1363,7 +1363,7 @@ Private Function sLeftOfLastNull(ByVal sIn As String)
 End Function
 
 
-Private Function sAPIFilter(sIn)
+Private Function sAPIFilter(sIn As String) As String
     'prepares sIn for use as a filter string in API common dialog functions
     Dim lChrNdx As Long
     Dim sOneChr As String
@@ -1435,12 +1435,12 @@ Public Property Let DefaultExt(nValue As String)
     mDefaultExt = nValue
 End Property
 
-Public Property Get DialogTitle() As String
-    DialogTitle = mDialogTitle
+Public Property Get DialogCaption() As String
+    DialogCaption = mDialogCaption
 End Property
 
-Public Property Let DialogTitle(nValue As String)
-    mDialogTitle = nValue
+Public Property Let DialogCaption(nValue As String)
+    mDialogCaption = nValue
 End Property
 
 Public Property Get Flags() As CommonDialogsFlags
@@ -1508,12 +1508,12 @@ Public Property Let FromPage(nValue As Long)
     mFromPage = nValue
 End Property
 
-Public Property Get hDC() As Long
+Public Property Get HDC() As Long
     EnsurePageSet
-    hDC = mhDc
+    HDC = mhDc
 End Property
 
-Public Property Let hDC(nValue As Long)
+Public Property Let HDC(nValue As Long)
     mhDc = nValue
 End Property
 
@@ -1786,8 +1786,8 @@ Private Sub ShowFileDialog(ByVal mAction As Integer, nFlags As Long, Optional By
     'tOpenFile.lpstrInitialDir As String - init from InitDir property
     tOpenFile.lpstrInitialDir = mInitDir
     
-    'tOpenFile.lpstrTitle As String - init from DialogTitle property
-    tOpenFile.lpstrTitle = mDialogTitle
+    'tOpenFile.lpstrTitle As String - init from DialogCaption property
+    tOpenFile.lpstrTitle = mDialogCaption
     
     'tOpenFile.flags As Long - init from Flags property
     tOpenFile.Flags = nFlags Or cdlbOFNNoChangeDir
@@ -2339,7 +2339,7 @@ End Sub
 Private Function GetDevNameString( _
       ByVal ptrDevNames As Long, _
       ByVal ptrOffset As Long _
-   )
+   ) As String
    Dim Ptr As Long
    Dim lSize As Long
    Dim B() As Byte
@@ -2596,7 +2596,7 @@ Private Function GetActiveWindowHwnd() As Long
     End If
 End Function
 
-Private Function CloneFont(nOrigFont) As StdFont
+Private Function CloneFont(nOrigFont As StdFont) As StdFont
     Dim iFont As New StdFont
     
     If nOrigFont Is Nothing Then Exit Function
